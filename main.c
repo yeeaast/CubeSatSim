@@ -2238,3 +2238,9 @@ if (setting == ON) {
   }
   return;
 }
+
+void mppt(void) {
+	int pin = 0; //change to actual dc-dc converter pin
+	pinMode(pin, OUTPUT);
+	digitalWrite(pin, mpptIter < dutyRatio);
+}
