@@ -2240,7 +2240,32 @@ if (setting == ON) {
 }
 
 void mppt(void) {
+	//converter code (constantly running)
 	int pin = 0; //change to actual dc-dc converter pin
 	pinMode(pin, OUTPUT);
 	digitalWrite(pin, mpptIter < dutyRatio);
+	mpptIter = (mpptIter + 0.01f)%1;
+
+	//mppt update code
+	if(mpptUpdateIter != 0) {
+		if(sensor.GetPower() > currentPower) {
+			bestRatio = dutyRatio;
+			bestPower = sensor.GetPower();
+		}
+		mpptUpdateIter -= 1;
+		if(mpptUpdateIter % 10 == 0) {
+			dutyRatio -= 0.01f;
+		}
+		if(mpptUpdateIter == 0) {
+			dutyRatio = bestRatio;
+			currentPower = bestPower;
+		}
+	} else if(Math.Abs(sensor.GetPower() - currentPower) > 0.025f) {
+		bestRatio = dutyRatio;
+		mpptUpdateIter = 200;
+		dutyRatio = dutyRatio + 0.1f;
+		if(dutyRatio > 1) {
+			dutyRatio = 1;
+		}
+	}
 }
