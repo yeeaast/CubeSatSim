@@ -2243,11 +2243,24 @@ void mppt(void) {
 	//converter code (constantly running)
 	int pin = 0; //change to actual dc-dc converter pin
 	pinMode(pin, OUTPUT);
-	digitalWrite(pin, mpptIter < dutyRatio);
-	mpptIter = (mpptIter + 0.01f)%1;
+	digitalWrite(pin, mpptIter < Math.Abs(dutyRatio));
+	mpptIter = (mpptIter + 0.05f)%1;
+	updateIter = updateIter - 1;
 
+	//updated mppt code
+	//dutyRatio, prevPower, updateIter
+	if(updateIter == 0) {
+		if(sensor.GetPower() < prevPower) {
+			dutyRatio = dutyRatio * -1;
+		} else {
+			prevPower = sensor.GetPower();
+		}
+		dutyRatio = dutyRatio + 0.01 * (Math.Abs(dutyRatio) / dutyRatio);
+		updateIter = 100;
+	}
+	
 	//mppt update code
-	if(mpptUpdateIter != 0) {
+	/*if(mpptUpdateIter != 0) {
 		if(sensor.GetPower() > currentPower) {
 			bestRatio = dutyRatio;
 			bestPower = sensor.GetPower();
@@ -2267,5 +2280,5 @@ void mppt(void) {
 		if(dutyRatio > 1) {
 			dutyRatio = 1;
 		}
-	}
+	}*/
 }
