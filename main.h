@@ -205,8 +205,6 @@ int error_count = 0;
 int groundCommandCount = 0;
 
 float dutyRatio = 0.5f;
-float bestRatio = 0.5f;
-float currentPower = 1.5f;
-float bestPower = 1.5f;
+float prevPower = 1.5f;
 float mpptIter = 0;
-float mpptUpdateIter = 0;
+float updateIter = 0;
