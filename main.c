@@ -2250,10 +2250,10 @@ void mppt(void) {
 	//updated mppt code
 	//dutyRatio, prevPower, updateIter
 	if(updateIter == 0) {
-		if(sensor.GetPower() < prevPower) {
+		if(voltage[map[BAT2]] * current[map[BAT2]] < prevPower) {
 			dutyRatio = dutyRatio * -1;
 		} else {
-			prevPower = sensor.GetPower();
+			prevPower = voltage[map[BAT2]] * current[map[BAT2]];
 		}
 		dutyRatio = dutyRatio + 0.01 * (Math.Abs(dutyRatio) / dutyRatio);
 		updateIter = 100;
