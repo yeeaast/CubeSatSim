@@ -897,6 +897,8 @@ int main(int argc, char * argv[]) {
 //    printf("Done sleeping\n");
   }
 
+  mppt();
+
   return 0;
 }
 
