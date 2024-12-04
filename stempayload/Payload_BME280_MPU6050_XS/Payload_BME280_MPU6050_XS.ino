@@ -34,8 +34,8 @@ MPU6050 mpu6050(Wire);
 long timer = 0;
 int bmePresent;
 int RXLED = 17;  // The RX LED has a defined Arduino pin
-int greenLED = 9;
-int blueLED = 8;
+int whiteLED = 9;
+int yellowLED = 8;
 int Sensor1 = 0;
 float Sensor2 = 0;
 float temp;
@@ -132,12 +132,12 @@ void setup() {
   delay(250);
   blink(500);
   delay(250);
-  led_set(greenLED, HIGH);
+  led_set(whiteLED, HIGH);
   delay(250);
-  led_set(greenLED, LOW);
-  led_set(blueLED, HIGH);
+  led_set(whiteLED, LOW);
+  led_set(yellowLED, HIGH);
   delay(250);
-  led_set(blueLED, LOW);
+  led_set(yellowLED, LOW);
 
   if (bme.begin(0x76)) {
     bmePresent = 1;
@@ -334,6 +334,7 @@ void loop() {
      
     float rotation = sqrt(mpu6050.getGyroX()*mpu6050.getGyroX() + mpu6050.getGyroY()*mpu6050.getGyroY() + mpu6050.getGyroZ()*mpu6050.getGyroZ()); 
     float acceleration = sqrt(mpu6050.getAccX()*mpu6050.getAccX() + mpu6050.getAccY()*mpu6050.getAccY() + mpu6050.getAccZ()*mpu6050.getAccZ()); 
+//    Serial.println(" ");	    
 //    Serial.print(rotation);
 //    Serial.print(" ");
 //    Serial.println(acceleration);
@@ -341,17 +342,20 @@ void loop() {
     if (first_read == true) {
       first_read = false;
       rest = acceleration;
+      Serial.println(" ");
+      Serial.print("rest acceleration: ");
+      Serial.println(rest);	    
     }
  
-    if (acceleration > 1.2 * rest)
-        led_set(greenLED, HIGH);
+    if (acceleration > 1.1 * rest)
+        led_set(whiteLED, HIGH);
     else
-        led_set(greenLED, LOW);
+        led_set(whiteLED, LOW);
         
-    if (rotation > 5)
-        led_set(blueLED, HIGH);
+    if (rotation > 20)
+        led_set(yellowLED, HIGH);
     else
-        led_set(blueLED, LOW);
+        led_set(yellowLED, LOW);
     }
 
     payload_loop(); // sensor extension read function defined in payload_extension.cpp	  
@@ -480,14 +484,14 @@ void blink_setup()
 #if defined __AVR_ATmega32U4__
   pinMode(RXLED, OUTPUT);  // Set RX LED as an output
   // TX LED is set as an output behind the scenes
-  pinMode(greenLED, OUTPUT);
-  pinMode(blueLED,OUTPUT);
+  pinMode(whiteLED, OUTPUT);
+  pinMode(yellowLED,OUTPUT);
 #endif
 
 #if defined(ARDUINO_ARCH_MBED_RP2040) && defined(ARDUINO_ARCH_RP2040)
   pinMode(LED_BUILTIN, OUTPUT);     
-  pinMode(18, OUTPUT);  // blue LED on STEM Payload Board v1.3.2
-  pinMode(19, OUTPUT);  // green LED on STEM Payload Board v1.3.2	   
+  pinMode(18, OUTPUT);  // yellow LED (was blue LED on STEM Payload Board v1.3.2)
+  pinMode(19, OUTPUT);  // white LED (was green LED on STEM Payload Board v1.3.2)	   
 #endif
 
 #if !defined(ARDUINO_ARCH_MBED_RP2040) && defined(ARDUINO_ARCH_RP2040)
@@ -554,9 +558,9 @@ delay(length);
 void led_set(int ledPin, bool state)
 {
 #if defined(ARDUINO_ARCH_STM32F0) || defined(ARDUINO_ARCH_STM32F1) || defined(ARDUINO_ARCH_STM32F3) || defined(ARDUINO_ARCH_STM32F4) || defined(ARDUINO_ARCH_STM32L4)
-  if (ledPin == greenLED)
+  if (ledPin == whiteLED)
     digitalWrite(PB9, state);
-  else if (ledPin == blueLED)
+  else if (ledPin == yellowLED)
     digitalWrite(PB8, state);    
 #endif
  
@@ -565,9 +569,9 @@ void led_set(int ledPin, bool state)
 #endif  
 
 #if defined (ARDUINO_ARCH_MBED_RP2040) || (ARDUINO_ARCH_RP2040)
-  if (ledPin == greenLED)
+  if (ledPin == whiteLED)
     digitalWrite(19, state);
-  else if (ledPin == blueLED)
+  else if (ledPin == yellowLED)
     digitalWrite(18, state);  
 #endif	
 }
