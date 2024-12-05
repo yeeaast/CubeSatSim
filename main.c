@@ -2249,7 +2249,7 @@ void mppt() {
 		digitalWrite(pin, mpptIter < dutyRatio * -1);
 	else
 		digitalWrite(pin, mpptIter < dutyRatio);
-	mpptIter = (mpptIter + 0.05f)%1f;
+	mpptIter = (mpptIter + 0.05f)%1.0f;
 	updateIter = updateIter - 1;
 
 	//updated mppt code
@@ -2259,7 +2259,10 @@ void mppt() {
 			dutyRatio = dutyRatio * -1;
 		}
 		prevPower = voltage[map[BAT2]] * current[map[BAT2]];
-		dutyRatio = dutyRatio + 0.01 * (Math.Abs(dutyRatio) / dutyRatio);
+		if(dutyRatio < 0)
+			dutyRatio = dutyRatio - 0.01;
+		else
+			dutyRatio = dutyRatio + 0.01;
 		updateIter = 100;
 	}
 	
