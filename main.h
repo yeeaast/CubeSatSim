@@ -204,6 +204,8 @@ long int loopTime;
 int error_count = 0;
 int groundCommandCount = 0;
 
+void mppt();
+
 float dutyRatio = 0.5f;
 float prevPower = 1.5f;
 float mpptIter = 0;
