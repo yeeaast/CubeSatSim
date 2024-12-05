@@ -2241,12 +2241,15 @@ if (setting == ON) {
   return;
 }
 
-void mppt(void) {
+void mppt() {
 	//converter code (constantly running)
 	int pin = 0; //change to actual dc-dc converter pin
 	pinMode(pin, OUTPUT);
-	digitalWrite(pin, mpptIter < Math.Abs(dutyRatio));
-	mpptIter = (mpptIter + 0.05f)%1;
+	if(dutyRatio < 0)
+		digitalWrite(pin, mpptIter < dutyRatio * -1);
+	else
+		digitalWrite(pin, mpptIter < dutyRatio);
+	mpptIter = (mpptIter + 0.05f)%1f;
 	updateIter = updateIter - 1;
 
 	//updated mppt code
