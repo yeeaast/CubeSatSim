@@ -2249,7 +2249,9 @@ void mppt() {
 		digitalWrite(pin, mpptIter < dutyRatio * -1);
 	else
 		digitalWrite(pin, mpptIter < dutyRatio);
-	mpptIter = (mpptIter + 0.05f)%1.0f;
+	mpptIter = mpptIter + 0.05f;
+	if(mpptIter > 1)
+		mpptIter = mpptIter - 1;
 	updateIter = updateIter - 1;
 
 	//updated mppt code
