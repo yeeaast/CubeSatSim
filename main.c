@@ -2243,10 +2243,10 @@ if (setting == ON) {
 
 void mppt() {
 	//converter code (constantly running)
-	int pin = 0; //change to actual dc-dc converter pin
+	int pin = 32; //change to actual dc-dc converter pin
 	pinMode(pin, OUTPUT);
 	if(dutyRatio < 0)
-		digitalWrite(pin, mpptIter < dutyRatio * -1);
+		digitalWrite(pin, mpptIter < (dutyRatio * -1));
 	else
 		digitalWrite(pin, mpptIter < dutyRatio);
 	mpptIter = mpptIter + 0.05f;
@@ -2256,7 +2256,7 @@ void mppt() {
 
 	//updated mppt code
 	//dutyRatio, prevPower, updateIter
-	if(updateIter == 0) {
+	if(updateIter <= 0) {
 		if(voltage[map[BAT2]] * current[map[BAT2]] < prevPower) {
 			dutyRatio = dutyRatio * -1;
 		}
